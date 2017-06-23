@@ -7,6 +7,15 @@
   <body>
     <div class="container">
       <h1>Mystery Word</h1>
+      <h3>You have {{#numGuesses}}{{.}}{{/numGuesses}} guesses left</h3>
+      <h1>{{#wordsArr}}{{words}}{{/wordsArr}}</h1>
+      <section class="game-display">
+        <form class="" action="" method="post">
+          <input type="text" name="letter" value="">
+          <input type="submit" value="Guess">
+        </form>
+        <h3>Letters Guessed: {{#guessedLetters}}{{.}} {{/guessedLetters}}</h3>
+      </section>
     </div>
   </body>
 </html>
