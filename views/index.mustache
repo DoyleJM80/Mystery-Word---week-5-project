@@ -3,12 +3,15 @@
   <head>
     <meta charset="utf-8">
     <title>Mystery Word</title>
+    <link rel="stylesheet" href="public/style.css">
   </head>
   <body>
     <div class="container">
       <h1>Mystery Word</h1>
-      <h3>You have {{#numGuesses}}{{.}}{{/numGuesses}} guesses left</h3>
-      <h1>{{#wordsArr}}{{words}}{{/wordsArr}}</h1>
+      <h3>You have {{numGuesses}} guesses left</h3>
+      <div class="word-area">
+        <h1>{{displayWord}}</h1>
+      </div>
       <section class="game-display">
         <form class="" action="" method="post">
           <input type="text" name="letter" value="">

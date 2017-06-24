@@ -4,8 +4,8 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var session = require('express-session');
 var parseurl = require('parseurl');
-var fs = require('fs');
 var busboy = require('busboy');
+var fs = require('fs');
 
 var app = express();
 
@@ -15,7 +15,7 @@ app.set('view engine', 'mustache');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use(session({
   secret: 'Covfefe',
@@ -23,31 +23,46 @@ app.use(session({
   saveUninitialized: true
 }));
 
-var words = {
-  wordsArr: [
-      {'words': fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n")}
-  ]
-};
-var numGuesses = [8];
+var allWords = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
+var word = allWords[Math.floor(Math.random() * allWords.length)];
+console.log(word);
 var guessedLetters = [];
+var displayWord = '';
+var numGuesses = 8;
+for (var i = 0; i < word.length; i++) {
+  displayWord += '_';
+}
 
+app.get('/signin', function (req, res) {
+  context = {};
+  res.render('signin', context);
+});
 
-
-app.get('/', function (req, res) {
+app.get('/index/', function (req, res) {
   context = {
     numGuesses: numGuesses,
-    guessedLetters: guessedLetters
+    guessedLetters: guessedLetters,
+    displayWord: displayWord
   };
   res.render('index', context);
 });
 
-app.post('/', function (req, res) {
-  var letter = req.body.letter;
-  console.log(letter);
+app.post('/index/', function (req, res) {
+  var letter = req.body.letter.toLowerCase();
   guessedLetters.push(letter);
-  res.redirect('/');
+  var index = word.indexOf(letter);
+  if (index === -1) {
+    numGuesses--;
+  }
+  if (numGuesses === 0) {
+    
+  }
+  while (index > -1) {
+    displayWord = displayWord.substr(0, index) + letter + displayWord.substr(index + 1);
+    index = word.indexOf(letter, index + 1);
+  }
+  res.redirect('/index/');
 });
 
 app.listen(3000, function () {
-  console.log('listening');
 });

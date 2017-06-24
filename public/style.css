@@ -1,0 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
+.word-area {
+  letter-spacing: 4px;
+}
