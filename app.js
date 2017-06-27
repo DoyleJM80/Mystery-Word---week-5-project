@@ -29,37 +29,59 @@ console.log(word);
 var guessedLetters = [];
 var displayWord = '';
 var numGuesses = 8;
+var message = 'Good Luck';
+var alreadyGuessed = '';
 for (var i = 0; i < word.length; i++) {
   displayWord += '_';
 }
 
-app.get('/signin', function (req, res) {
+app.get('/signIn', function (req, res) {
   context = {};
-  res.render('signin', context);
+  res.render('signIn', context);
+});
+
+app.post('/signIn', function (req, res) {
+  res.redirect('/index/');
 });
 
 app.get('/index/', function (req, res) {
   context = {
     numGuesses: numGuesses,
     guessedLetters: guessedLetters,
-    displayWord: displayWord
+    displayWord: displayWord,
+    message: message,
+    alreadyGuessed: alreadyGuessed
   };
   res.render('index', context);
 });
 
 app.post('/index/', function (req, res) {
   var letter = req.body.letter.toLowerCase();
-  guessedLetters.push(letter);
+  if (guessedLetters.includes(letter)) {
+    alreadyGuessed = 'You have already guessed this letter, try again.';
+  } else {
+    alreadyGuessed = '';
+  }
+
+
   var index = word.indexOf(letter);
   if (index === -1) {
+    if (index === -1 && guessedLetters.includes(letter)) {
+      numGuesses++;
+    }
     numGuesses--;
   }
-  if (numGuesses === 0) {
-    
-  }
+  guessedLetters.push(letter);
   while (index > -1) {
     displayWord = displayWord.substr(0, index) + letter + displayWord.substr(index + 1);
     index = word.indexOf(letter, index + 1);
+  }
+  if (numGuesses < 1) {
+    message = 'You lost, would you like to play again?';
+    displayWord = word;
+  }
+  if (!displayWord.includes('_')) {
+    message = 'You Win!  Would you like to play again?';
   }
   res.redirect('/index/');
 });
