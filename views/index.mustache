@@ -18,7 +18,11 @@
           <input type="text" name="letter" value="">
           <input type="submit" value="Guess">
         </form>
+        <form class="" action="/clear" method="post">
+          <input type="submit" value="New Word">
+        </form>
         <h1>{{message}}</h1>
+        <h1>{{tooManyLetters}}</h1>
         <h1>{{alreadyGuessed}}</h1>
         <h3>Letters Guessed: {{#guessedLetters}}{{.}} {{/guessedLetters}}</h3>
       </section>
